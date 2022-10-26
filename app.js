@@ -11,7 +11,7 @@ const routes = require('./routes');
 const NotFoundError = require('./errors/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, DB_SECRET } = process.env;
 
 const app = express();
 
@@ -28,7 +28,7 @@ const app = express();
 //   credentials: true,
 // };
 
-mongoose.connect(NODE_ENV === 'production' ? JWT_SECRET : 'mongodb://127.0.0.1:27017/bitfilmsdb', {
+mongoose.connect(NODE_ENV === 'production' ? DB_SECRET : 'mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
 });
 
