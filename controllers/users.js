@@ -9,30 +9,22 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.signOut = (req, res) => {
   res.clearCookie('jwt', {
-    httpOnly: true,
-    sameSite: 'none',
-    secure: true,
+    httpOnly: true, sameSite: 'none', secure: true,
   }).send({ message: 'Выход' });
 };
 
 module.exports.createUser = (req, res, next) => {
   const {
-    name,
-    email,
-    password,
+    name, email, password,
   } = req.body;
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      name,
-      email,
-      password: hash,
+      name, email, password: hash,
     }))
     .then((user) => {
       res.status(201).send({
-        _id: user._id,
-        name: user.name,
-        email,
+        _id: user._id, name: user.name, email,
       });
     })
     .catch((err) => {
@@ -50,16 +42,9 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
-      );
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-        sameSite: 'none',
-        // secure: true,
+        maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: 'none',
       });
       res.send({ message: 'Авторизация успешна', token });
     })
@@ -91,7 +76,9 @@ module.exports.updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError('Переданы некорректные данные.'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
       } else {
         next(err);
       }
