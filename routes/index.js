@@ -9,6 +9,7 @@ const routerMovie = require('./movie');
 
 const { authorization } = require('../middlewares/auth');
 const NotFoundError = require('../errors/NotFoundError');
+const { NOT_FOUND_PAGE_ERROR } = require('../utils/constants');
 
 router.get('/crash-test', () => {
   setTimeout(() => {
@@ -26,10 +27,10 @@ router.get('/signout', signOut);
 
 router.use('/users', routerUsers);
 
-router.use('/movie', routerMovie);
+router.use('/movies', routerMovie);
 
 router.use((req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
+  next(new NotFoundError(NOT_FOUND_PAGE_ERROR));
 });
 
 module.exports = router;
