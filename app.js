@@ -18,6 +18,7 @@ const app = express();
 
 const allowedCors = [
   'https://react.movies.nomoredomains.club',
+  'http://react.movies.nomoredomains.club',
 ];
 
 const corsOptions = {
