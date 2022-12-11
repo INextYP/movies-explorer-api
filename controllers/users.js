@@ -17,7 +17,9 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.signOut = (req, res) => {
   res.clearCookie('jwt', {
-    httpOnly: true, sameSite: 'none', secure: true,
+    httpOnly: true,
+    sameSite: true,
+    secure: false,
   }).send({ message: 'Выход' });
 };
 
@@ -52,7 +54,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : SECRET_KEY, { expiresIn: '7d' });
       res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: 'none',
+        maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: 'none', secure: true,
       });
       res.send({ message: 'Авторизация успешна' });
     })

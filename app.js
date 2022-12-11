@@ -1,10 +1,11 @@
 require('dotenv').config();
 
-const { PORT = 3000, NODE_ENV, DB_SECRET } = process.env;
+const { PORT = 3001, NODE_ENV, DB_SECRET } = process.env;
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const { limiter } = require('./middlewares/rateLimiter');
@@ -15,11 +16,22 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
+const allowedCors = [
+  'https://react.movies.nomoredomains.club',
+];
+
+const corsOptions = {
+  origin: allowedCors,
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
 mongoose.connect(NODE_ENV === 'production' ? DB_SECRET : dbDev, {
   useNewUrlParser: true,
 });
 
-app.use(limiter);
+app.use(cors(corsOptions));
+
 app.use(helmet());
 
 app.use(cookieParser());
@@ -27,6 +39,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+
+app.use(limiter);
 
 app.use('/', routes);
 
