@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { PORT = 3000, NODE_ENV, DB_SECRET } = process.env;
+const { PORT = 3005, NODE_ENV, DB_SECRET } = process.env;
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const express = require('express');
@@ -19,6 +19,7 @@ const app = express();
 const allowedCors = [
   'https://react.movies.nomoredomains.club',
   'http://react.movies.nomoredomains.club',
+  'http://localhost:3000',
 ];
 
 const corsOptions = {

@@ -16,11 +16,7 @@ const {
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.signOut = (req, res) => {
-  res.clearCookie('jwt', {
-    httpOnly: true,
-    sameSite: true,
-    secure: false,
-  }).send({ message: 'Выход' });
+  res.clearCookie('jwt').send({ message: 'Выход' });
 };
 
 module.exports.createUser = (req, res, next) => {
