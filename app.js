@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { PORT = 3005, NODE_ENV, DB_SECRET } = process.env;
+const { PORT = 3000, NODE_ENV, DB_SECRET } = process.env;
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const express = require('express');
